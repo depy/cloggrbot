@@ -1,4 +1,4 @@
-package gr.clog.bot;
+package gr.clog.bot.logging;
 
 import java.net.UnknownHostException;
 
@@ -8,7 +8,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
-public class DbLogger 
+public class DbLogger implements ILogger
 {
 	DBCollection dbCollection;
 	
@@ -30,6 +30,7 @@ public class DbLogger
 		}
 	}
 	
+	@Override
 	public void logMsg(String nick, String channel, String msg, long time)
 	{
 		BasicDBObject bdo = new BasicDBObject();

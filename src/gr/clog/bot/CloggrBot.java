@@ -1,5 +1,9 @@
 package gr.clog.bot;
 
+import gr.clog.bot.logging.DbLogger;
+import gr.clog.bot.logging.FileLogger;
+import gr.clog.bot.logging.ILogger;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -7,6 +11,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CloggrBot implements Runnable
 {
@@ -18,15 +24,19 @@ public class CloggrBot implements Runnable
 	private boolean exit = false;
 	private String line;
 	private RequestHandler requestHandler;
-	private DbLogger dbLogger;
+	private List<ILogger> loggers;
 	
-	public CloggrBot(String server, int port, String nick)
+	public CloggrBot(String server, int port, String nick, String logFilePath)
 	{
 		this.server = server;
 		this.port = port;
 		this.nick = nick;
 	    this.requestHandler = RequestHandler.getInstance();
-	    this.dbLogger = new DbLogger("localhost", 27017, "cloggr", "irclogs");
+	    ILogger dbLogger = new DbLogger("localhost", 27017, "cloggr", "irclogs");
+	    ILogger fileLogger = new FileLogger(logFilePath);
+	    this.loggers = new ArrayList<ILogger>();
+	    this.loggers.add(dbLogger);
+	    this.loggers.add(fileLogger);
 	}
 	
 	@Override
@@ -34,7 +44,7 @@ public class CloggrBot implements Runnable
 	{
 		try 
 		{
-			requestHandler.setDbLogger(dbLogger);
+			requestHandler.setLoggers(loggers);
 			connect();
 			while(!exit)
 			{
@@ -60,13 +70,13 @@ public class CloggrBot implements Runnable
 	
 	public static void main(String[] args) throws InterruptedException
 	{
-		if(args.length!=3)
+		if(args.length!=4)
 		{
 			System.out.println("Invalid number of passed arguments...");
 		}
 		else
 		{
-			CloggrBot bot = new CloggrBot(args[0], Integer.parseInt(args[1]), args[2]);
+			CloggrBot bot = new CloggrBot(args[0], Integer.parseInt(args[1]), args[2], args[3]);
 			Thread t = new Thread(bot);
 			t.start();
 			t.join();

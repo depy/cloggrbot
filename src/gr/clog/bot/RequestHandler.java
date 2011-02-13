@@ -1,5 +1,6 @@
 package gr.clog.bot;
 
+import gr.clog.bot.logging.ILogger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +12,7 @@ public class RequestHandler
 	private List<String> authTokens;
 	private List<String> channels;
 	private List<String> channelsToLog;
-	private DbLogger dbLogger;
+	List<ILogger> loggers;
 	
 	protected RequestHandler()
 	{
@@ -60,7 +61,10 @@ public class RequestHandler
 			
 			if(channelsToLog.contains(chan.toLowerCase().toString()))
 			{
-				dbLogger.logMsg(nick, chan, text, d.getTime());
+				for(ILogger logger: loggers)
+				{
+					logger.logMsg(nick, chan, text, d.getTime());
+				}
 			}
 		}
 		
@@ -112,8 +116,8 @@ public class RequestHandler
 		return authTokens.contains(authToken);
 	}
 
-	public void setDbLogger(DbLogger dbLogger)
+	public void setLoggers(List<ILogger> loggers)
 	{
-		this.dbLogger = dbLogger;
+		this.loggers = loggers;
 	}	
 }
