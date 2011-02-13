@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="cloggr_bot" default="compile" basedir=".">
+
+  <property name="project.dir" value="."/>
+  <property name="build.dir" value="${project.dir}/bin"/>
+  <property name="lib.dir" value="${project.dir}/lib"/>
+  <property name="package.file.jar" value="${build.dir}/cloggr_bot.jar"/>
+
+   <path id="class.path">
+      <dirset dir="${build.dir}"/>
+      <fileset dir="${lib.dir}"/>
+   </path>
+
+   <target name="compile">
+      <mkdir dir="${build.dir}"/>
+      <javac classpathref="class.path" srcdir="${project.dir}/src" destdir="${build.dir}"/>
+      <copy todir="${build.dir}/lib">
+			<fileset dir="${lib.dir}" />
+		</copy>
+   </target>
+
+  <target name="package-jar">
+    <delete file="${package.file.jar}"/>
+    <jar destfile="${package.file.jar}">
+    	<manifest>
+        	<attribute name="Main-Class" value="gr.clog.bot.CloggrBot"/>
+        	<attribute name="Class-Path" value="lib/mongo-2.4.jar" />
+        </manifest>
+		<fileset dir="${build.dir}" excludes="*.zip"/>
+    </jar>
+  </target>
+
+</project>
