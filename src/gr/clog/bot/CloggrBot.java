@@ -26,17 +26,18 @@ public class CloggrBot implements Runnable
 	private RequestHandler requestHandler;
 	private List<ILogger> loggers;
 	
-	public CloggrBot(String server, int port, String nick, String logFilePath)
+	public CloggrBot(String server, int port, String nick, String logFilePath) throws InterruptedException
 	{
 		this.server = server;
 		this.port = port;
 		this.nick = nick;
-	    this.requestHandler = RequestHandler.getInstance();
+	    this.requestHandler = RequestHandler.getInstance();    
 	    ILogger dbLogger = new DbLogger("localhost", 27017, "cloggr", "irclogs");
 	    ILogger fileLogger = new FileLogger(logFilePath);
 	    this.loggers = new ArrayList<ILogger>();
 	    this.loggers.add(dbLogger);
 	    this.loggers.add(fileLogger);
+	    
 	}
 	
 	@Override
@@ -46,6 +47,7 @@ public class CloggrBot implements Runnable
 		{
 			requestHandler.setLoggers(loggers);
 			connect();
+			boolean joinedChannels = false;
 			while(!exit)
 			{
 				line = reader.readLine();
@@ -56,6 +58,12 @@ public class CloggrBot implements Runnable
 					writer.write(response);
 					writer.flush();
 				}
+				if(line.contains("End of /MOTD command.") && !joinedChannels)
+				{
+					System.out.println("Joining speified channels (this may take a while!)...");
+					joinChans(this.requestHandler.getChannels());
+					joinedChannels=true;
+				}
 			}
 		} 
 		catch (UnknownHostException e)
@@ -65,21 +73,6 @@ public class CloggrBot implements Runnable
 		catch (IOException e)
 		{
 			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String[] args) throws InterruptedException
-	{
-		if(args.length!=4)
-		{
-			System.out.println("Invalid number of passed arguments...");
-		}
-		else
-		{
-			CloggrBot bot = new CloggrBot(args[0], Integer.parseInt(args[1]), args[2], args[3]);
-			Thread t = new Thread(bot);
-			t.start();
-			t.join();
 		}
 	}
 	
@@ -94,8 +87,43 @@ public class CloggrBot implements Runnable
 	public void login(String address) throws IOException
 	{
         writer.write("NICK "+nick+"\n");
-        writer.write("PRIVMSG NickServ identify f1shb0n3\n");
         writer.write("USER "+nick+" "+address+": Cloggr Bot\n");
         writer.flush();
+	}
+	
+	public void joinChans(List<String> chans)
+	{
+		try 
+		{
+			for(String chan: chans)
+			{
+				writer.write("JOIN "+chan+"\n");
+				writer.flush(); 
+				Thread.sleep(1000);
+			}
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		} 
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) throws InterruptedException, IOException
+	{
+		if(args.length!=4)
+		{
+			System.out.println("Invalid number of passed arguments...");
+		}
+		else
+		{			
+			CloggrBot bot = new CloggrBot(args[0], Integer.parseInt(args[1]), args[2], args[3]);
+			Thread t = new Thread(bot);
+			t.start();
+			t.join();
+		}
 	}
 }

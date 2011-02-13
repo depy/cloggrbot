@@ -85,6 +85,15 @@ public class Request
         return systemMsg.find();
 	}
 	
+	public boolean isNickServRegisterNotice()
+	{
+        Pattern systemMsgRegex = Pattern.compile(":NickServ!NickServ@services. NOTICE", Pattern.CASE_INSENSITIVE );
+        Matcher systemMsg = systemMsgRegex.matcher(this.line);
+        return systemMsg.find() && line.contains("This nickname is registered. Please choose a different nickname, or identify");
+	}
+	
+	
+	
 	public String getLine()
 	{
 		return line;

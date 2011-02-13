@@ -24,7 +24,7 @@ public class FileLogger implements ILogger
 				{
 					initWriter();
 				}
-				writer.write(String.valueOf(time)+" "+nick+" "+channel+" "+msg+"\r\n");
+				writer.write(String.valueOf(time)+" "+channel+" "+nick+" "+msg+"\r\n");
 				writer.flush();
 			} 
 			catch (IOException e)
