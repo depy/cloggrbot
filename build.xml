@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
-
 <project name="cloggr_bot" default="compile" basedir=".">
 
   <property name="project.dir" value="."/>
   <property name="build.dir" value="${project.dir}/bin"/>
   <property name="lib.dir" value="${project.dir}/lib"/>
   <property name="package.file.jar" value="${build.dir}/cloggr_bot.jar"/>
-
+  
    <path id="class.path">
       <dirset dir="${build.dir}"/>
       <fileset dir="${lib.dir}"/>

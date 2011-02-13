@@ -1,18 +1,13 @@
 package gr.clog.bot;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class RequestHandler 
 {
 	private static RequestHandler instance = null;
-	private BufferedWriter writer;
 	private List<String> authTokens;
 	private List<String> channels;
 	private List<String> channelsToLog;
@@ -115,11 +110,6 @@ public class RequestHandler
 	private boolean isAuthenticated(String authToken)
 	{
 		return authTokens.contains(authToken);
-	}
-	
-	public void setWriter(BufferedWriter writer)
-	{
-		instance.writer = writer;
 	}
 
 	public void setDbLogger(DbLogger dbLogger)

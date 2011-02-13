@@ -8,8 +8,6 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import com.mongodb.MongoException;
-
 public class CloggrBot implements Runnable
 {
 	private String server;
@@ -36,7 +34,6 @@ public class CloggrBot implements Runnable
 	{
 		try 
 		{
-			requestHandler.setWriter(writer);
 			requestHandler.setDbLogger(dbLogger);
 			connect();
 			while(!exit)
