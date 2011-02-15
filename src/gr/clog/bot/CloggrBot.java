@@ -32,7 +32,7 @@ public class CloggrBot implements Runnable
 		this.port = port;
 		this.nick = nick;
 	    this.requestHandler = RequestHandler.getInstance();    
-	    ILogger dbLogger = new DbLogger("localhost", 27017, "cloggr", "irclogs");
+	    ILogger dbLogger = new DbLogger("localhost", 27017, "cloggr", "messages");
 	    ILogger fileLogger = new FileLogger(logFilePath);
 	    this.loggers = new ArrayList<ILogger>();
 	    this.loggers.add(dbLogger);
@@ -60,7 +60,7 @@ public class CloggrBot implements Runnable
 				}
 				if(line.contains("End of /MOTD command.") && !joinedChannels)
 				{
-					System.out.println("Joining speified channels (this may take a while!)...");
+					System.out.println("Joining specified channels (this may take a while!)...");
 					joinChans(this.requestHandler.getChannels());
 					joinedChannels=true;
 				}

@@ -73,6 +73,7 @@ public class Request
 	
 	public boolean isChannelMsg()
 	{
+	
         Pattern channelMsgRegex = Pattern.compile(" PRIVMSG #", Pattern.CASE_INSENSITIVE );
         Matcher channelMsg = channelMsgRegex.matcher(this.line);
         return channelMsg.find() && line.charAt(line.indexOf("PRIVMSG")+8)=='#';

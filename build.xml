@@ -16,7 +16,10 @@
       <javac classpathref="class.path" srcdir="${project.dir}/src" destdir="${build.dir}"/>
       <copy todir="${build.dir}/lib">
 			<fileset dir="${lib.dir}" />
-		</copy>
+	  </copy>
+   	  <copy todir="${build.dir}/gr/clogr/bot">
+   			<fileset file="gr/clogr/bot/channels.conf"/>
+   	 </copy>
    </target>
 
   <target name="package-jar">
@@ -26,7 +29,7 @@
         	<attribute name="Main-Class" value="gr.clog.bot.CloggrBot"/>
         	<attribute name="Class-Path" value="lib/mongo-2.4.jar" />
         </manifest>
-		<fileset dir="${build.dir}" excludes="*.zip"/>
+		<fileset dir="${build.dir}" excludes="*.zip" includes="*.conf"/>
     </jar>
   </target>
 
