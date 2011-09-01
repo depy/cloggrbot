@@ -47,7 +47,7 @@ public class RequestHandler
 		if(request.isAuth())
 		{
 			String password = request.getLine().split("!auth")[1].trim();
-			if(password.equals("c0kle"))
+			if(password.equals("yourpassword"))
 			{
 				authTokens.add(getAuthToken(request.getLine()));
 			}
@@ -55,7 +55,7 @@ public class RequestHandler
 		
 		if(request.isNickServRegisterNotice())
 		{           
-			return "PRIVMSG NickServ :identify f1shb0n3\n";
+			return "PRIVMSG NickServ :identify password\n";
 		}
 		
 		if(request.isSystemMsg())
@@ -70,12 +70,7 @@ public class RequestHandler
 			String chan = temp2.substring(0,temp2.indexOf(":")).trim();
 			String text = temp2.substring(temp2.indexOf(":")+1, temp2.length());
 			String nick = temp1.substring(1, temp1.indexOf("!"));
-			/*
-			String[] msg = request.getLine().split("PRIVMSG");
-			String nick = msg[0].substring(1, msg[0].indexOf("!"));
-			String text = msg[1].split(":")[1];
-			String chan = msg[1].split(":")[0].trim();
-			*/
+			
 			Date d = new Date();
 			
 			if(channelsToLog.contains(chan.toLowerCase().toString()))
